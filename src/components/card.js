@@ -41,6 +41,10 @@ const Card = (article) => {
   author.appendChild(imgContainer);
   imgContainer.appendChild(image);
   author.appendChild(authorName);
+
+  card.addEventListener('click', (event) => {
+    console.log(article.headline);
+  })
   return card;
 }
 
@@ -60,7 +64,7 @@ const cardAppender = (selector) => {
       const data = res.data.articles;
       let topics = [];
       let articles = [];
-      console.log("Data: ", data);
+      // console.log("Data: ", data);
       for (const topic in data){
         topics.push(topic);
       };
@@ -69,7 +73,7 @@ const cardAppender = (selector) => {
           articles.push(data[topic][item]);
         };
       })
-      console.log(articles);
+      // console.log(articles);
       articles.forEach(article => {
         entryPoint.append(Card(article));
       })
