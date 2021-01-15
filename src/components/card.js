@@ -1,3 +1,6 @@
+import axios from "axios";
+import { keys } from "regenerator-runtime";
+
 const Card = (article) => {
   // TASK 5
   // ---------------------
@@ -18,21 +21,26 @@ const Card = (article) => {
   // </div>
   //
   const card = document.createElement('div');
-  card.classList.add('card');
 
   const headline = document.createElement('div');
   const author = document.createElement('div');
   const imgContainer = document.createElement('div');
   const image = document.createElement('img');
-  image.src = null;
-  const name = document.createElement('span');
+  const authorName = document.createElement('span');
 
+  card.classList.add('card');
+  headline.classList.add('headline');
+  author.classList.add('author');
+  imgContainer.classList.add('img-container');
+  image.src = article.authorPhoto;
+  headline.textContent = article.headline;
+  authorName.textContent = article.authorName;
 
   card.appendChild(headline);
   card.appendChild(author);
   author.appendChild(imgContainer);
   imgContainer.appendChild(image);
-  author.appendChild(name);
+  author.appendChild(authorName);
   return card;
 }
 
@@ -45,6 +53,30 @@ const cardAppender = (selector) => {
   // Create a card from each and every article object in the response, using the Card component.
   // Append each card to the element in the DOM that matches the selector passed to the function.
   //
+  const entryPoint = document.querySelector(selector);
+  axios
+    .get('https://lambda-times-api.herokuapp.com/articles')
+    .then((res) => {
+      const data = res.data.articles;
+      let topics = [];
+      let articles = [];
+      console.log("Data: ", data);
+      for (const topic in data){
+        topics.push(topic);
+      };
+      topics.forEach(topic => {
+        for (const item in data[topic] ){
+          articles.push(data[topic][item]);
+        };
+      })
+      console.log(articles);
+      articles.forEach(article => {
+        entryPoint.append(Card(article));
+      })
+    })
+    .catch ((err) => {
+      console.log("Something went wrong", err);
+    });
 }
 
 export { Card, cardAppender }
